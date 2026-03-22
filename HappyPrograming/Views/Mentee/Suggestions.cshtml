@@ -1,45 +1,62 @@
-﻿@model List<HappyPrograming.Models.DTO.MentorSuggestionDTO>
+@model List<HappyPrograming.Models.DTO.MentorSuggestionDTO>
+@{
+    ViewData["Title"] = "Gợi ý Mentor";
+}
 
 <div class="container mt-4">
-    <h3>Mentor phù hợp cho yêu cầu của bạn</h3>
-    <div class="row">
-        @foreach (var mentor in Model)
-        {
-            <div class="col-md-4 mb-3">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">@mentor.FullName (@mentor.AccountName)</h5>
-                        <p class="text-warning">Đánh giá: @mentor.AverageStar.ToString("0.0") ⭐</p>
-                        <p class="small">Đang dạy: @mentor.CurrentRequests lớp</p>
-                        <button onclick="openRateModal(@mentor.MentorId)" class="btn btn-primary btn-sm w-100">Đánh giá Mentor này</button>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="mb-0">Mentor gợi ý theo kỹ năng yêu cầu</h3>
+        <a asp-action="Index" class="btn btn-outline-secondary">← Về danh sách yêu cầu</a>
+    </div>
+    <p class="text-muted small">Yêu cầu #@ViewBag.RequestId — hiển thị mentor có ít nhất một kỹ năng trùng với yêu cầu.</p>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info">Chưa có mentor phù hợp (hoặc yêu cầu chưa gắn kỹ năng). Bạn có thể cập nhật yêu cầu để thêm kỹ năng.</div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var mentor in Model)
+            {
+                <div class="col-md-4 mb-3">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">@mentor.FullName</h5>
+                            <p class="text-muted small mb-1">@mentor.AccountName</p>
+                            <p class="text-warning">Đánh giá TB: @mentor.AverageStar.ToString("0.0") ⭐</p>
+                            <p class="small">Đang dạy: @mentor.CurrentRequests lớp</p>
+                            <button type="button" onclick="openRateModal(@mentor.MentorId)" class="btn btn-primary btn-sm w-100 mt-auto">Đánh giá Mentor này</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        }
-    </div>
+            }
+        </div>
+    }
 
     <div class="modal fade" id="rateModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Đánh giá Mentor</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
                 </div>
                 <div class="modal-body">
                     <input type="hidden" id="modalMentorId" />
-                    <input type="hidden" id="modalRequestId" value="@ViewBag.RequestId" /> <div class="mb-3">
-                        <label>Số sao</label>
+                    <input type="hidden" id="modalRequestId" value="@ViewBag.RequestId" />
+                    <div class="mb-3">
+                        <label class="form-label" for="modalStar">Số sao</label>
                         <select id="modalStar" class="form-select">
-                            <option value="5">5 sao - Rất tốt</option>
+                            <option value="5">5 sao — Rất tốt</option>
                             <option value="4">4 sao</option>
                             <option value="3">3 sao</option>
                             <option value="2">2 sao</option>
-                            <option value="1">1 sao - Kém</option>
+                            <option value="1">1 sao — Cần cải thiện</option>
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label>Bình luận</label>
-                        <textarea id="modalComment" class="form-control" rows="3"></textarea>
+                        <label class="form-label" for="modalComment">Bình luận</label>
+                        <textarea id="modalComment" class="form-control" rows="3" placeholder="Nhận xét (tùy chọn)"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -51,6 +68,8 @@
     </div>
 
     <script>
+        const rateMentorUrl = '@Url.Action("RateMentor", "Mentee")';
+
         function openRateModal(mentorId) {
             document.getElementById('modalMentorId').value = mentorId;
             new bootstrap.Modal(document.getElementById('rateModal')).show();
@@ -58,29 +77,35 @@
 
         function sendRating() {
             const ratingData = {
-                RequestId: parseInt(document.getElementById('modalRequestId').value),
-                MentorId: parseInt(document.getElementById('modalMentorId').value),
-                Star: parseInt(document.getElementById('modalStar').value),
+                RequestId: parseInt(document.getElementById('modalRequestId').value, 10),
+                MentorId: parseInt(document.getElementById('modalMentorId').value, 10),
+                Star: parseInt(document.getElementById('modalStar').value, 10),
                 Comment: document.getElementById('modalComment').value
             };
 
-            fetch('/Mentee/RateMentor', { // Đường dẫn tới Action ở bước 2
+            if (!ratingData.RequestId || !ratingData.MentorId) {
+                alert('Thiếu thông tin yêu cầu hoặc mentor.');
+                return;
+            }
+
+            fetch(rateMentorUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(ratingData)
             })
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                return res.json();
+            })
             .then(data => {
                 if (data.success) {
                     alert(data.message);
-                    location.reload(); // Load lại để thấy kết quả
+                    location.reload();
                 } else {
-                    alert("Lỗi: " + data.message);
+                    alert('Lỗi: ' + data.message);
                 }
-            });
+            })
+            .catch(() => alert('Không gửi được đánh giá. Kiểm tra kết nối hoặc thử lại.'));
         }
     </script>
-</div>
-
-<div id="rateModal" class="modal fade" tabindex="-1">
 </div>

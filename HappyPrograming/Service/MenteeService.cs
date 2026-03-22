@@ -1,4 +1,4 @@
-﻿using HappyPrograming.Models;
+using HappyPrograming.Models;
 using HappyPrograming.Models.DTO;
 using HappyPrograming.Repository;
 
@@ -12,7 +12,7 @@ namespace HappyPrograming.Service
             _menteeRepository = menteeRepository;
         }
 
-        public async Task<string> CreateNewRequest(Request request, List<int> skillIds)
+        public async Task<string> CreateNewRequest(Request request, List<int>? skillIds)
         {
             if (string.IsNullOrEmpty(request.Title) || string.IsNullOrEmpty(request.Content))
             {
@@ -56,7 +56,7 @@ namespace HappyPrograming.Service
                 TotalRequests = requests.Count,
 
 
-                TotalHours = requests.Sum(r => r.Deadlinehour),
+                TotalHours = requests.Sum(r => (double)r.Deadlinehour),
 
                 TotalMentors = requests
                     .SelectMany(r => r.Mentors)
@@ -68,50 +68,55 @@ namespace HappyPrograming.Service
             return dto;
         }
 
-        public async Task<string> UpdateMenteeRequest(UpdateRequestDTO dto)
+        public async Task<string> UpdateMenteeRequest(UpdateRequestDTO dto, int menteeId)
         {
-
-            if (string.IsNullOrEmpty(dto.Title) || string.IsNullOrEmpty(dto.Content))
+            if (string.IsNullOrWhiteSpace(dto.Title) || string.IsNullOrWhiteSpace(dto.Content))
             {
-                return "Title and Content are required.";
+                return "Vui lòng nhập đầy đủ tiêu đề và nội dung.";
             }
 
             if (dto.SkillIds == null || !dto.SkillIds.Any())
             {
-                return "Please select at least one skill.";
+                return "Vui lòng chọn ít nhất một kỹ năng.";
             }
 
             if (dto.Deadlinedate < DateOnly.FromDateTime(DateTime.Now))
             {
-                return "Deadline cannot be in the past.";
+                return "Ngày hết hạn không được trong quá khứ.";
             }
 
             try
             {
-
-                bool isUpdated = await _menteeRepository.UpdateRequestAsync(dto);
+                bool isUpdated = await _menteeRepository.UpdateRequestAsync(dto, menteeId);
 
                 if (isUpdated)
                 {
                     return "Success";
                 }
-                else
-                {
-                    return "Request not found.";
-                }
+
+                return "Không tìm thấy yêu cầu hoặc bạn không có quyền chỉnh sửa.";
             }
             catch (Exception ex)
             {
-                return $"Update failed: {ex.Message}";
+                return $"Cập nhật thất bại: {ex.Message}";
             }
         }
         public async Task<string> SaveFeedback(RatingDTO dto, int menteeId)
         {
             if (dto.Star < 1 || dto.Star > 5)
             {
-                return "Invalid rating star. Please rate from 1 to 5.";
+                return "Số sao phải từ 1 đến 5.";
             }
 
+            if (!await _menteeRepository.RequestOwnedByMenteeAsync(dto.RequestId, menteeId))
+            {
+                return "Không tìm thấy yêu cầu hoặc bạn không có quyền đánh giá.";
+            }
+
+            if (await _menteeRepository.MenteeHasFeedbackForRequestAsync(dto.RequestId, menteeId))
+            {
+                return "Bạn đã gửi đánh giá cho yêu cầu này.";
+            }
 
             var feedback = new Feedback
             {
@@ -119,9 +124,9 @@ namespace HappyPrograming.Service
                 MenteeId = menteeId,
                 MentorId = dto.MentorId,
                 RatingStar = dto.Star,
-                Comment = dto.Comment
+                Comment = string.IsNullOrWhiteSpace(dto.Comment) ? null : dto.Comment.Trim(),
+                CreatedAt = DateTime.UtcNow
             };
-
 
             bool isSaved = await _menteeRepository.SaveFeedbackAsync(feedback);
 
@@ -130,7 +135,7 @@ namespace HappyPrograming.Service
                 return "Success";
             }
 
-            return "Failed to save feedback.";
+            return "Không thể lưu đánh giá. Vui lòng thử lại.";
         }
 
 
@@ -138,22 +143,20 @@ namespace HappyPrograming.Service
         {
             var mentors = await _menteeRepository.GetSuggestedMentorsByRequestAsync(requestId);
 
-
-            var suggestionList = mentors.Select(m => new MentorSuggestionDTO
-            {
-                MentorId = m.Id,
-                FullName = $"{m.User.FirstName} {m.User.LastName}",
-                AccountName = m.User.Username,
-
-
-                AverageStar = m.Feedbacks.Any()
-                    ? (float)m.Feedbacks.Average(f => f.RatingStar)
-                    : 0,
-
-                CurrentRequests = m.Requests.Count(r => r.Status != "Closed" && r.Status != "Canceled")
-            }).ToList();
-
-            return suggestionList;
+            return mentors
+                .Select(m => new MentorSuggestionDTO
+                {
+                    MentorId = m.Id,
+                    FullName = $"{m.User.FirstName} {m.User.LastName}",
+                    AccountName = m.User.Username,
+                    AverageStar = m.Feedbacks.Count > 0
+                        ? (float)m.Feedbacks.Average(f => f.RatingStar)
+                        : 0f,
+                    CurrentRequests = m.Requests.Count(r => r.Status != "Closed" && r.Status != "Canceled")
+                })
+                .OrderByDescending(d => d.AverageStar)
+                .ThenBy(d => d.FullName)
+                .ToList();
         }
 
     }

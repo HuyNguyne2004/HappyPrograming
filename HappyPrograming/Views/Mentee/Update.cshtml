@@ -1,16 +1,40 @@
-﻿@model HappyPrograming.Models.DTO.UpdateRequestDTO
+@model HappyPrograming.Models.DTO.UpdateRequestDTO
 @{
-    var skills = ViewBag.Skills as List<HappyPrograming.Models.Skill>;
+    ViewData["Title"] = "Cập nhật yêu cầu";
+    var skills = ViewBag.Skills as List<HappyPrograming.Models.Skill> ?? new List<HappyPrograming.Models.Skill>();
 }
 
 <div class="container mt-4">
     <h2>Cập nhật yêu cầu #@Model.Id</h2>
-    <form asp-action="Update" method="post">
+    <hr />
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">@ViewBag.Error</div>
+    }
+
+    <form asp-controller="Mentee" asp-action="Update" method="post">
         <input type="hidden" asp-for="Id" />
 
         <div class="mb-3">
-            <label class="form-label">Tiêu đề</label>
+            <label class="form-label" asp-for="Title">Tiêu đề</label>
             <input asp-for="Title" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" asp-for="Content">Nội dung chi tiết</label>
+            <textarea asp-for="Content" class="form-control" rows="4"></textarea>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label" asp-for="Deadlinedate">Ngày hết hạn</label>
+                <input asp-for="Deadlinedate" type="date" class="form-control" />
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label" asp-for="Deadlinehour">Số giờ mong muốn</label>
+                <input asp-for="Deadlinehour" type="number" class="form-control" min="1" />
+            </div>
         </div>
 
         <div class="mb-3">
@@ -21,7 +45,7 @@
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" name="skillIds" value="@skill.Id"
                                id="skill_@skill.Id"
-                               @(Model.SkillIds.Contains(skill.Id) ? "checked" : "")>
+                               @(Model.SkillIds != null && Model.SkillIds.Contains(skill.Id) ? "checked" : null)>
                         <label class="form-check-label" for="skill_@skill.Id">@skill.Name</label>
                     </div>
                 }
@@ -29,5 +53,6 @@
         </div>
 
         <button type="submit" class="btn btn-success">Cập nhật</button>
+        <a asp-action="Index" class="btn btn-secondary">Quay lại danh sách</a>
     </form>
 </div>

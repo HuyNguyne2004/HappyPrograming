@@ -1,6 +1,8 @@
-﻿@model List<HappyPrograming.Models.Request>
+@using HappyPrograming.Models.DTO
+@model List<HappyPrograming.Models.Request>
 @{
-    var stats = ViewBag.Stats as HappyPrograming.Models.DTO.StatisticDTO;
+    ViewData["Title"] = "Yêu cầu của tôi";
+    var stats = ViewBag.Stats as StatisticDTO ?? new StatisticDTO();
 }
 
 <div class="container mt-4">
@@ -14,7 +16,7 @@
         <div class="col-md-4">
             <div class="card bg-success text-white p-3">
                 <h5>Tổng số giờ học</h5>
-                <h2>@stats.TotalHours h</h2>
+                <h2>@stats.TotalHours.ToString("0.##") h</h2>
             </div>
         </div>
         <div class="col-md-4">
@@ -30,34 +32,42 @@
         <a asp-action="Create" class="btn btn-warning text-white font-weight-bold">+ Tạo yêu cầu mới</a>
     </div>
 
-    <table class="table table-striped border">
-        <thead class="bg-dark text-white">
-            <tr>
-                <th>Tiêu đề</th>
-                <th>Kỹ năng</th>
-                <th>Deadline</th>
-                <th>Trạng thái</th>
-                <th>Hành động</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
+    @if (Model == null || !Model.Any())
+    {
+        <p class="text-muted">Bạn chưa có yêu cầu nào. Hãy tạo yêu cầu mới để bắt đầu.</p>
+    }
+    else
+    {
+        <table class="table table-striped border">
+            <thead class="bg-dark text-white">
                 <tr>
-                    <td>@item.Title</td>
-                    <td>
-                        @foreach (var s in item.Skills)
-                        {
-                            <span class="badge bg-secondary">@s.Name</span>
-                        }
-                    </td>
-                    <td>@item.Deadlinedate.ToString("dd/MM/yyyy")</td>
-                    <td><span class="badge bg-warning text-dark">@item.Status</span></td>
-                    <td>
-                        <a asp-action="Suggestions" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info">Xem gợi ý Mentor</a>
-                    </td>
+                    <th>Tiêu đề</th>
+                    <th>Kỹ năng</th>
+                    <th>Deadline</th>
+                    <th>Trạng thái</th>
+                    <th>Hành động</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Title</td>
+                        <td>
+                            @foreach (var s in item.Skills)
+                            {
+                                <span class="badge bg-secondary">@s.Name</span>
+                            }
+                        </td>
+                        <td>@item.Deadlinedate.ToString("dd/MM/yyyy")</td>
+                        <td><span class="badge bg-warning text-dark">@item.Status</span></td>
+                        <td>
+                            <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Sửa</a>
+                            <a asp-action="Suggestions" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info">Gợi ý Mentor</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
 </div>

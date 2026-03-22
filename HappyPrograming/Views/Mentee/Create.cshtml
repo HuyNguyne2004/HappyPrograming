@@ -1,6 +1,6 @@
-﻿@model HappyPrograming.Models.Request
+@model HappyPrograming.Models.Request
 @{
-    var skills = ViewBag.Skills as List<HappyPrograming.Models.Skill>;
+    var skills = ViewBag.Skills as List<HappyPrograming.Models.Skill> ?? new List<HappyPrograming.Models.Skill>();
 }
 
 <div class="container mt-4">
@@ -12,7 +12,7 @@
         <div class="alert alert-danger">@ViewBag.Error</div>
     }
 
-    <form asp-action="Create" method="post">
+    <form asp-controller="Mentee" asp-action="Create" method="post">
         <div class="mb-3">
             <label class="form-label">Tiêu đề</label>
             <input asp-for="Title" class="form-control" placeholder="Ví dụ: Học ASP.NET MVC" />

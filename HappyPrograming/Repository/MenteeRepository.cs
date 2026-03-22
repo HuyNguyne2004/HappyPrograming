@@ -1,4 +1,4 @@
-﻿using HappyPrograming.Models;
+using HappyPrograming.Models;
 using HappyPrograming.Models.DTO;
 using Microsoft.EntityFrameworkCore;
 
@@ -38,8 +38,9 @@ namespace HappyPrograming.Repository
                 .ToListAsync();
         }
 
-        public async Task SaveRequestAsync(Request request, List<int> skillIds)
+        public async Task SaveRequestAsync(Request request, List<int>? skillIds)
         {
+            skillIds ??= new List<int>();
             var selectedSkills = await _context.Skills
                 .Where(s => skillIds.Contains(s.Id))
                 .ToListAsync();
@@ -58,11 +59,18 @@ namespace HappyPrograming.Repository
                 .ToListAsync();
         }
 
-        public async Task<bool> UpdateRequestAsync(UpdateRequestDTO dto)
+        public async Task<Request?> GetRequestByIdForMenteeAsync(int requestId, int menteeId)
+        {
+            return await _context.Requests
+                .Include(r => r.Skills)
+                .FirstOrDefaultAsync(r => r.Id == requestId && r.CreatorId == menteeId);
+        }
+
+        public async Task<bool> UpdateRequestAsync(UpdateRequestDTO dto, int menteeId)
         {
             var existingRequest = await _context.Requests
                 .Include(r => r.Skills)
-                .FirstOrDefaultAsync(r => r.Id == dto.Id);
+                .FirstOrDefaultAsync(r => r.Id == dto.Id && r.CreatorId == menteeId);
 
             if (existingRequest == null) return false;
 
@@ -72,8 +80,9 @@ namespace HappyPrograming.Repository
             existingRequest.Deadlinehour = dto.Deadlinehour;
 
             existingRequest.Skills.Clear();
+            var skillIds = dto.SkillIds ?? new List<int>();
             var newSkills = await _context.Skills
-                .Where(s => dto.SkillIds.Contains(s.Id))
+                .Where(s => skillIds.Contains(s.Id))
                 .ToListAsync();
 
             foreach (var skill in newSkills)
@@ -84,10 +93,25 @@ namespace HappyPrograming.Repository
             return await _context.SaveChangesAsync() > 0;
         }
 
+        public async Task<bool> RequestOwnedByMenteeAsync(int requestId, int menteeId)
+        {
+            return await _context.Requests.AnyAsync(r => r.Id == requestId && r.CreatorId == menteeId);
+        }
+
+        public async Task<bool> MenteeHasFeedbackForRequestAsync(int requestId, int menteeId)
+        {
+            return await _context.Feedbacks.AnyAsync(f => f.RequestId == requestId && f.MenteeId == menteeId);
+        }
+
         public async Task<bool> SaveFeedbackAsync(Feedback feedback)
         {
             try
             {
+                if (feedback.CreatedAt == null)
+                {
+                    feedback.CreatedAt = DateTime.UtcNow;
+                }
+
                 _context.Feedbacks.Add(feedback);
                 return await _context.SaveChangesAsync() > 0;
             }
@@ -105,7 +129,13 @@ namespace HappyPrograming.Repository
                 .Select(s => s.Id)
                 .ToListAsync();
 
+            if (requestSkillIds.Count == 0)
+            {
+                return new List<Mentor>();
+            }
+
             return await _context.Mentors
+                .AsNoTracking()
                 .Include(m => m.User)
                 .Include(m => m.Feedbacks)
                 .Include(m => m.Requests)
