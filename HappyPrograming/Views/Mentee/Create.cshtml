@@ -1,0 +1,53 @@
+﻿@model HappyPrograming.Models.Request
+@{
+    var skills = ViewBag.Skills as List<HappyPrograming.Models.Skill>;
+}
+
+<div class="container mt-4">
+    <h2>Tạo yêu cầu mới</h2>
+    <hr />
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">@ViewBag.Error</div>
+    }
+
+    <form asp-action="Create" method="post">
+        <div class="mb-3">
+            <label class="form-label">Tiêu đề</label>
+            <input asp-for="Title" class="form-control" placeholder="Ví dụ: Học ASP.NET MVC" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Nội dung chi tiết</label>
+            <textarea asp-for="Content" class="form-control" rows="4"></textarea>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Ngày hết hạn (Deadline)</label>
+                <input asp-for="Deadlinedate" type="date" class="form-control" />
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Số giờ mong muốn (Hour)</label>
+                <input asp-for="Deadlinehour" type="number" class="form-control" />
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Kỹ năng cần hỗ trợ (Skills)</label>
+            <div class="border p-3">
+                @foreach (var skill in skills)
+                {
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="skillIds" value="@skill.Id" id="skill_@skill.Id">
+                        <label class="form-check-label" for="skill_@skill.Id">@skill.Name</label>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Lưu yêu cầu</button>
+        <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+    </form>
+</div>
