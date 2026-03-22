@@ -1,0 +1,39 @@
+﻿@model IEnumerable<dynamic>
+
+@{
+    ViewData["Title"] = "Thống kê Mentee";
+}
+
+<h2 class="mb-4">Thống kê Mentee</h2>
+
+<table class="table table-striped table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Họ và tên</th>
+            <th>Username</th>
+            <th>Số request</th>
+            <th>Tổng giờ yêu cầu</th>
+            <th>Tổng kỹ năng</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Fullname</td>
+                <td>@item.Username</td>
+                <td>@item.TotalRequests</td>
+                <td>@item.TotalHours</td>
+                <td>@item.TotalSkills</td>
+            </tr>
+        }
+    </tbody>
+    <tfoot class="table-info">
+        <tr>
+            <td colspan="2"><strong>Tổng cộng (@Model.Count() Mentee)</strong></td>
+            <td><strong>@Model.Sum(x => x.TotalRequests)</strong></td>
+            <td><strong>@Model.Sum(x => x.TotalHours)</strong></td>
+            <td><strong>@Model.Sum(x => x.TotalSkills)</strong></td>
+        </tr>
+    </tfoot>
+</table>

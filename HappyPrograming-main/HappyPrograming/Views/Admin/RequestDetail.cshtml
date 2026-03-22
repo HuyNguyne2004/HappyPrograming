@@ -1,0 +1,41 @@
+﻿@model HappyPrograming.Models.Request
+
+@{
+    ViewData["Title"] = "Chi tiết Request";
+}
+
+<h2>Chi tiết Request #@Model.Id</h2>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title">@(Model.Title ?? "Không có tiêu đề")</h5>
+        <p><strong>Người tạo:</strong> @(Model.Creator?.Username ?? "N/A") (@(Model.Creator?.FirstName ?? "") @(Model.Creator?.LastName ?? ""))</p>
+        <p>
+            <strong>Trạng thái:</strong>
+            <span class="badge bg-@(Model.Status == "Open" ? "warning" : Model.Status == "Processing" ? "primary" : "success")">@Model.Status</span>
+        </p>
+        <p>
+            <strong>Deadline:</strong>
+            @(Model.Deadlinedate is { } deadline ? deadline.ToString("dd/MM/yyyy") : "Chưa đặt") - @Model.Deadlinehour giờ
+        </p>
+        <p><strong>Nội dung yêu cầu:</strong></p>
+        <pre class="bg-light p-3">@(Model.Content ?? "Không có nội dung")</pre>
+
+        <h6>Kỹ năng liên quan:</h6>
+        @if (Model.Skills?.Any() == true)
+        {
+            <div class="d-flex flex-wrap gap-2">
+                @foreach (var skill in Model.Skills)
+                {
+                    <span class="badge bg-info">@skill.Name</span>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="text-muted">Chưa chọn kỹ năng nào</p>
+        }
+    </div>
+</div>
+
+<a asp-action="Requests" class="btn btn-secondary">Quay lại danh sách</a>

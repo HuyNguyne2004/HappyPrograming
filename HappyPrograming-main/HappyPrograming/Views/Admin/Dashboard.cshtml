@@ -1,0 +1,92 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard - Happy Programming";
+}
+
+<h1 class="mb-4 text-center">Admin Dashboard</h1>
+<p class="text-center lead mb-5">Chào mừng bạn đến với khu vực quản trị Happy Programming Academy</p>
+
+<div class="row g-4">
+
+    <!-- Card: Quản lý Mentor -->
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-primary">
+            <div class="card-body text-center">
+                <i class="bi bi-person-badge-fill fs-1 text-primary mb-3"></i>
+                <h5 class="card-title">Quản lý Mentor</h5>
+                <p class="card-text">Xem danh sách, kích hoạt/vô hiệu hóa, xem đánh giá và số request đã chấp nhận.</p>
+                <a href="@Url.Action("Mentors")" class="btn btn-primary">Truy cập →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card: Quản lý Request -->
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-success">
+            <div class="card-body text-center">
+                <i class="bi bi-list-check fs-1 text-success mb-3"></i>
+                <h5 class="card-title">Quản lý Request</h5>
+                <p class="card-text">Xem tất cả yêu cầu học, lọc theo trạng thái/thời gian, xem chi tiết request.</p>
+                <a href="@Url.Action("Requests")" class="btn btn-success">Truy cập →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card: Thống kê Mentee -->
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-info">
+            <div class="card-body text-center">
+                <i class="bi bi-graph-up fs-1 text-info mb-3"></i>
+                <h5 class="card-title">Thống kê Mentee</h5>
+                <p class="card-text">Xem tổng hợp số lượng request, giờ học, kỹ năng theo từng mentee.</p>
+                <a href="@Url.Action("MenteeStatistics")" class="btn btn-info">Truy cập →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card: Quản lý Kỹ năng -->
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-warning">
+            <div class="card-body text-center">
+                <i class="bi bi-tools fs-1 text-warning mb-3"></i>
+                <h5 class="card-title">Quản lý Kỹ năng</h5>
+                <p class="card-text">Thêm, sửa, bật/tắt các kỹ năng mà hệ thống hỗ trợ.</p>
+                <a href="@Url.Action("Skills")" class="btn btn-warning text-dark">Truy cập →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card: Thống kê nhanh (tùy chọn) -->
+    <div class="col-md-8">
+        <div class="card shadow-sm border-secondary">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0">Tổng quan hệ thống</h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6 col-md-3 mb-3">
+                        <h3 class="text-primary">@ViewBag.TotalMentors</h3>
+                        <p>Mentor</p>
+                    </div>
+                    <div class="col-6 col-md-3 mb-3">
+                        <h3 class="text-success">@ViewBag.TotalRequests</h3>
+                        <p>Request</p>
+                    </div>
+                    <div class="col-6 col-md-3 mb-3">
+                        <h3 class="text-info">@ViewBag.TotalMentees</h3>
+                        <p>Mentee</p>
+                    </div>
+                    <div class="col-6 col-md-3 mb-3">
+                        <h3 class="text-warning">@ViewBag.TotalSkills</h3>
+                        <p>Kỹ năng</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Thêm icon Bootstrap Icons (nếu chưa có) -->
+@section Styles {
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+}

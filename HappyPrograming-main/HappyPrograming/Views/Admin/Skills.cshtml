@@ -1,0 +1,53 @@
+﻿@model IEnumerable<HappyPrograming.Models.Skill>
+
+@{
+    ViewData["Title"] = "Quản lý Kỹ năng";
+}
+
+<h2 class="mb-4">Quản lý Kỹ năng</h2>
+
+<a asp-action="CreateSkill" class="btn btn-success mb-3">+ Thêm kỹ năng mới</a>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<table class="table table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>STT</th>
+            <th>ID</th>
+            <th>Tên kỹ năng</th>
+            <th>Mô tả</th>
+            <th>Trạng thái</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int stt = 1;
+        }
+        @foreach (var skill in Model)
+        {
+            <tr>
+                <td>@stt</td>
+                <td>@skill.Id</td>
+                <td>@skill.Name</td>
+                <td>@skill.Description</td>
+                <td>
+                    <form asp-action="ToggleSkill" asp-route-id="@skill.Id" method="post" style="display:inline;">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="badge @(skill.Status == "Active" ? "bg-success" : "bg-danger") border-0">
+                            @skill.Status
+                        </button>
+                    </form>
+                </td>
+                <td>
+                    <a asp-action="UpdateSkill" asp-route-id="@skill.Id" class="btn btn-sm btn-warning">Sửa</a>
+                </td>
+            </tr>
+            stt++;
+        }
+    </tbody>
+</table>
