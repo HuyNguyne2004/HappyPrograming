@@ -93,6 +93,38 @@ namespace HappyPrograming.Migrations
                         .IsUnique();
 
                     b.ToTable("feedback", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Comment = "Rất nhiệt tình!",
+                            CreatedAt = new DateTime(2026, 3, 22, 11, 55, 23, 21, DateTimeKind.Local).AddTicks(681),
+                            MenteeId = 6,
+                            MentorId = 1,
+                            RatingStar = 5.0,
+                            RequestId = 5
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Comment = "Giải thích dễ hiểu.",
+                            CreatedAt = new DateTime(2026, 3, 22, 11, 55, 23, 21, DateTimeKind.Local).AddTicks(685),
+                            MenteeId = 6,
+                            MentorId = 1,
+                            RatingStar = 4.0,
+                            RequestId = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Comment = "Cảm ơn anh Khoa đã giúp!",
+                            CreatedAt = new DateTime(2026, 3, 22, 11, 55, 23, 21, DateTimeKind.Local).AddTicks(688),
+                            MenteeId = 3,
+                            MentorId = 1,
+                            RatingStar = 5.0,
+                            RequestId = 1
+                        });
                 });
 
             modelBuilder.Entity("HappyPrograming.Models.Mentor", b =>
@@ -459,7 +491,7 @@ namespace HappyPrograming.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2026, 3, 21, 18, 24, 47, 925, DateTimeKind.Local).AddTicks(3940),
+                            CreatedAt = new DateTime(2026, 3, 22, 11, 55, 23, 21, DateTimeKind.Local).AddTicks(286),
                             Dob = new DateOnly(1990, 1, 1),
                             EmailAddress = "admin@happy.com",
                             FirstName = "Admin",
@@ -474,7 +506,7 @@ namespace HappyPrograming.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2026, 3, 21, 18, 24, 47, 925, DateTimeKind.Local).AddTicks(3960),
+                            CreatedAt = new DateTime(2026, 3, 22, 11, 55, 23, 21, DateTimeKind.Local).AddTicks(303),
                             Dob = new DateOnly(1995, 5, 20),
                             EmailAddress = "khoa@mentor.com",
                             FirstName = "Khoa",
@@ -489,7 +521,7 @@ namespace HappyPrograming.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2026, 3, 21, 18, 24, 47, 925, DateTimeKind.Local).AddTicks(3964),
+                            CreatedAt = new DateTime(2026, 3, 22, 11, 55, 23, 21, DateTimeKind.Local).AddTicks(308),
                             Dob = new DateOnly(2002, 10, 15),
                             EmailAddress = "an@mentee.com",
                             FirstName = "An",
@@ -504,7 +536,7 @@ namespace HappyPrograming.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2026, 3, 21, 18, 24, 47, 925, DateTimeKind.Local).AddTicks(3969),
+                            CreatedAt = new DateTime(2026, 3, 22, 11, 55, 23, 21, DateTimeKind.Local).AddTicks(314),
                             Dob = new DateOnly(1992, 3, 10),
                             EmailAddress = "lan.hoang@mentor.com",
                             FirstName = "Lan",
@@ -519,7 +551,7 @@ namespace HappyPrograming.Migrations
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2026, 3, 21, 18, 24, 47, 925, DateTimeKind.Local).AddTicks(3974),
+                            CreatedAt = new DateTime(2026, 3, 22, 11, 55, 23, 21, DateTimeKind.Local).AddTicks(318),
                             Dob = new DateOnly(1988, 8, 25),
                             EmailAddress = "minh.vu@mentor.com",
                             FirstName = "Minh",
@@ -534,7 +566,7 @@ namespace HappyPrograming.Migrations
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2026, 3, 21, 18, 24, 47, 925, DateTimeKind.Local).AddTicks(3979),
+                            CreatedAt = new DateTime(2026, 3, 22, 11, 55, 23, 21, DateTimeKind.Local).AddTicks(323),
                             Dob = new DateOnly(2003, 1, 12),
                             EmailAddress = "long.phi@mentee.com",
                             FirstName = "Long",
@@ -549,7 +581,7 @@ namespace HappyPrograming.Migrations
                         new
                         {
                             Id = 7,
-                            CreatedAt = new DateTime(2026, 3, 21, 18, 24, 47, 925, DateTimeKind.Local).AddTicks(3983),
+                            CreatedAt = new DateTime(2026, 3, 22, 11, 55, 23, 21, DateTimeKind.Local).AddTicks(328),
                             Dob = new DateOnly(2004, 11, 30),
                             EmailAddress = "vy.le@mentee.com",
                             FirstName = "Vy",
@@ -579,6 +611,18 @@ namespace HappyPrograming.Migrations
                     b.HasIndex("RequestId");
 
                     b.ToTable("mentor_request", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            MentorId = 1,
+                            RequestId = 2
+                        },
+                        new
+                        {
+                            MentorId = 1,
+                            RequestId = 3
+                        });
                 });
 
             modelBuilder.Entity("MentorSkill", b =>
@@ -597,6 +641,23 @@ namespace HappyPrograming.Migrations
                     b.HasIndex("SkillId");
 
                     b.ToTable("mentor_skill", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            MentorId = 1,
+                            SkillId = 1
+                        },
+                        new
+                        {
+                            MentorId = 1,
+                            SkillId = 3
+                        },
+                        new
+                        {
+                            MentorId = 3,
+                            SkillId = 3
+                        });
                 });
 
             modelBuilder.Entity("RequestSkill", b =>
@@ -615,6 +676,28 @@ namespace HappyPrograming.Migrations
                     b.HasIndex("SkillId");
 
                     b.ToTable("request_skill", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            RequestId = 1,
+                            SkillId = 1
+                        },
+                        new
+                        {
+                            RequestId = 1,
+                            SkillId = 3
+                        },
+                        new
+                        {
+                            RequestId = 4,
+                            SkillId = 1
+                        },
+                        new
+                        {
+                            RequestId = 3,
+                            SkillId = 3
+                        });
                 });
 
             modelBuilder.Entity("RoleFeature", b =>

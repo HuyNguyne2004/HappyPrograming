@@ -1,4 +1,6 @@
 ﻿using HappyPrograming.Models;
+using HappyPrograming.Repository;
+using HappyPrograming.Service;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +13,9 @@ builder.Services.AddDbContext<HappyprogrammingContext>(options =>
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<MenteeRepository>();
+builder.Services.AddScoped<MenteeService>();
 
 var app = builder.Build();
 
@@ -31,6 +36,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Mentee}/{action=Index}/{id?}");
 
 app.Run();

@@ -336,7 +336,7 @@ public partial class HappyprogrammingContext : DbContext
             new Mentor { Id = 3, UserId = 5, Profession = "Data Scientist", ProfessionIntroduction = "Python Specialist", ServiceDescription = "Teaching SQL and ML" }
         );
 
-        // 5. Seed Request (CreatorId PHẢI TỒN TẠI TRONG USER)
+
         modelBuilder.Entity<Request>().HasData(
             new Request { Id = 1, CreatorId = 3, Title = "Lỗi kết nối DbContext", Deadlinedate = new DateOnly(2026, 4, 1), Deadlinehour = 2, Content = "Fix bug scaffold.", Status = "Open" },
             new Request { Id = 2, CreatorId = 6, Title = "Học ReactJS từ đầu", Deadlinedate = new DateOnly(2026, 4, 15), Deadlinehour = 10, Content = "Lộ trình học React.", Status = "Processing" },
@@ -344,6 +344,36 @@ public partial class HappyprogrammingContext : DbContext
             new Request { Id = 4, CreatorId = 3, Title = "Review đồ án", Deadlinedate = new DateOnly(2026, 5, 10), Deadlinehour = 20, Content = "Góp ý kiến trúc.", Status = "Open" },
             new Request { Id = 5, CreatorId = 6, Title = "Docker căn bản", Deadlinedate = new DateOnly(2026, 4, 20), Deadlinehour = 3, Content = "Build container cho .NET.", Status = "Closed" }
         );
+
+        modelBuilder.Entity("RequestSkill").HasData(
+            new { RequestId = 1, SkillId = 1 },
+            new { RequestId = 1, SkillId = 3 },
+            new { RequestId = 4, SkillId = 1 },
+            new { RequestId = 3, SkillId = 3 }
+        );
+
+
+        modelBuilder.Entity("MentorSkill").HasData(
+            new { MentorId = 1, SkillId = 1 },
+            new { MentorId = 1, SkillId = 3 },
+            new { MentorId = 3, SkillId = 3 }
+        );
+
+
+        modelBuilder.Entity<Feedback>().HasData(
+            new Feedback { Id = 1, RequestId = 5, MenteeId = 6, MentorId = 1, RatingStar = 5, Comment = "Rất nhiệt tình!", CreatedAt = DateTime.Now },
+            new Feedback { Id = 2, RequestId = 2, MenteeId = 6, MentorId = 1, RatingStar = 4, Comment = "Giải thích dễ hiểu.", CreatedAt = DateTime.Now },
+
+
+            new Feedback { Id = 3, RequestId = 1, MenteeId = 3, MentorId = 1, RatingStar = 5, Comment = "Cảm ơn anh Khoa đã giúp!", CreatedAt = DateTime.Now }
+        );
+
+
+        modelBuilder.Entity("MentorRequest").HasData(
+            new { MentorId = 1, RequestId = 2 },
+            new { MentorId = 1, RequestId = 3 }
+        );
+
 
         OnModelCreatingPartial(modelBuilder);
     }

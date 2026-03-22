@@ -276,13 +276,13 @@ namespace HappyPrograming.Migrations
                 columns: new[] { "id", "address", "avatar", "created_at", "dob", "email_address", "first_name", "gender", "last_name", "password", "phone_number", "role_id", "status", "username" },
                 values: new object[,]
                 {
-                    { 1, null, null, new DateTime(2026, 3, 21, 18, 24, 47, 925, DateTimeKind.Local).AddTicks(3940), new DateOnly(1990, 1, 1), "admin@happy.com", "Admin", "Other", "System", "password123", "0123456789", 1, "Active", "admin01" },
-                    { 2, null, null, new DateTime(2026, 3, 21, 18, 24, 47, 925, DateTimeKind.Local).AddTicks(3960), new DateOnly(1995, 5, 20), "khoa@mentor.com", "Khoa", "Male", "Nguyen", "password123", "0987654321", 2, "Active", "mentor_khoa" },
-                    { 3, null, null, new DateTime(2026, 3, 21, 18, 24, 47, 925, DateTimeKind.Local).AddTicks(3964), new DateOnly(2002, 10, 15), "an@mentee.com", "An", "Female", "Tran", "password123", "0909090909", 3, "Active", "mentee_an" },
-                    { 4, null, null, new DateTime(2026, 3, 21, 18, 24, 47, 925, DateTimeKind.Local).AddTicks(3969), new DateOnly(1992, 3, 10), "lan.hoang@mentor.com", "Lan", "Female", "Hoang", "password123", "0911223344", 2, "Active", "mentor_lan" },
-                    { 5, null, null, new DateTime(2026, 3, 21, 18, 24, 47, 925, DateTimeKind.Local).AddTicks(3974), new DateOnly(1988, 8, 25), "minh.vu@mentor.com", "Minh", "Male", "Vu", "password123", "0922334455", 2, "Active", "mentor_minh" },
-                    { 6, null, null, new DateTime(2026, 3, 21, 18, 24, 47, 925, DateTimeKind.Local).AddTicks(3979), new DateOnly(2003, 1, 12), "long.phi@mentee.com", "Long", "Male", "Phi", "password123", "0933445566", 3, "Active", "mentee_long" },
-                    { 7, null, null, new DateTime(2026, 3, 21, 18, 24, 47, 925, DateTimeKind.Local).AddTicks(3983), new DateOnly(2004, 11, 30), "vy.le@mentee.com", "Vy", "Female", "Le", "password123", "0944556677", 3, "Active", "mentee_vy" }
+                    { 1, null, null, new DateTime(2026, 3, 22, 11, 55, 23, 21, DateTimeKind.Local).AddTicks(286), new DateOnly(1990, 1, 1), "admin@happy.com", "Admin", "Other", "System", "password123", "0123456789", 1, "Active", "admin01" },
+                    { 2, null, null, new DateTime(2026, 3, 22, 11, 55, 23, 21, DateTimeKind.Local).AddTicks(303), new DateOnly(1995, 5, 20), "khoa@mentor.com", "Khoa", "Male", "Nguyen", "password123", "0987654321", 2, "Active", "mentor_khoa" },
+                    { 3, null, null, new DateTime(2026, 3, 22, 11, 55, 23, 21, DateTimeKind.Local).AddTicks(308), new DateOnly(2002, 10, 15), "an@mentee.com", "An", "Female", "Tran", "password123", "0909090909", 3, "Active", "mentee_an" },
+                    { 4, null, null, new DateTime(2026, 3, 22, 11, 55, 23, 21, DateTimeKind.Local).AddTicks(314), new DateOnly(1992, 3, 10), "lan.hoang@mentor.com", "Lan", "Female", "Hoang", "password123", "0911223344", 2, "Active", "mentor_lan" },
+                    { 5, null, null, new DateTime(2026, 3, 22, 11, 55, 23, 21, DateTimeKind.Local).AddTicks(318), new DateOnly(1988, 8, 25), "minh.vu@mentor.com", "Minh", "Male", "Vu", "password123", "0922334455", 2, "Active", "mentor_minh" },
+                    { 6, null, null, new DateTime(2026, 3, 22, 11, 55, 23, 21, DateTimeKind.Local).AddTicks(323), new DateOnly(2003, 1, 12), "long.phi@mentee.com", "Long", "Male", "Phi", "password123", "0933445566", 3, "Active", "mentee_long" },
+                    { 7, null, null, new DateTime(2026, 3, 22, 11, 55, 23, 21, DateTimeKind.Local).AddTicks(328), new DateOnly(2004, 11, 30), "vy.le@mentee.com", "Vy", "Female", "Le", "password123", "0944556677", 3, "Active", "mentee_vy" }
                 });
 
             migrationBuilder.InsertData(
@@ -305,6 +305,46 @@ namespace HappyPrograming.Migrations
                     { 3, "Review câu lệnh JOIN.", 7, new DateOnly(2026, 3, 25), 5, "Open", "Tối ưu câu lệnh SQL" },
                     { 4, "Góp ý kiến trúc.", 3, new DateOnly(2026, 5, 10), 20, "Open", "Review đồ án" },
                     { 5, "Build container cho .NET.", 6, new DateOnly(2026, 4, 20), 3, "Closed", "Docker căn bản" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "feedback",
+                columns: new[] { "id", "comment", "created_at", "mentee_id", "mentor_id", "rating_star", "request_id" },
+                values: new object[,]
+                {
+                    { 1, "Rất nhiệt tình!", new DateTime(2026, 3, 22, 11, 55, 23, 21, DateTimeKind.Local).AddTicks(681), 6, 1, 5.0, 5 },
+                    { 2, "Giải thích dễ hiểu.", new DateTime(2026, 3, 22, 11, 55, 23, 21, DateTimeKind.Local).AddTicks(685), 6, 1, 4.0, 2 },
+                    { 3, "Cảm ơn anh Khoa đã giúp!", new DateTime(2026, 3, 22, 11, 55, 23, 21, DateTimeKind.Local).AddTicks(688), 3, 1, 5.0, 1 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "mentor_request",
+                columns: new[] { "mentor_id", "request_id" },
+                values: new object[,]
+                {
+                    { 1, 2 },
+                    { 1, 3 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "mentor_skill",
+                columns: new[] { "mentor_id", "skill_id" },
+                values: new object[,]
+                {
+                    { 1, 1 },
+                    { 1, 3 },
+                    { 3, 3 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "request_skill",
+                columns: new[] { "request_id", "skill_id" },
+                values: new object[,]
+                {
+                    { 1, 1 },
+                    { 1, 3 },
+                    { 3, 3 },
+                    { 4, 1 }
                 });
 
             migrationBuilder.CreateIndex(
