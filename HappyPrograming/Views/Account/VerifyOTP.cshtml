@@ -1,0 +1,12 @@
+﻿@model string
+<h2>Xác thực OTP</h2>
+<p>Mã đã được gửi đến: @Model</p>
+<form asp-action="VerifyOTP" method="post">
+    <input type="hidden" name="email" value="@Model" />
+    <input type="text" name="otp" placeholder="Nhập mã 6 số" required />
+    <button type="submit">Xác thực</button>
+</form>
+@if (ViewBag.Error != null)
+{
+    <p style="color:red">@ViewBag.Error</p>
+}

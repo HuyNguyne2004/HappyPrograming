@@ -1,0 +1,22 @@
+﻿@model HappyPrograming.Models.User
+<h2>Đăng ký tài khoản</h2>
+<form asp-action="Register" method="post">
+    <input type="text" name="Username" placeholder="Username" required /><br />
+    <input type="email" name="EmailAddress" placeholder="Email" required /><br />
+    <input type="password" name="Password" placeholder="Password" required /><br />
+    <input type="text" name="FirstName" placeholder="First Name" required /><br />
+    <input type="text" name="LastName" placeholder="Last Name" required /><br />
+
+    <label>Gender:</label>
+    <select name="Gender">
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+    </select><br />
+
+    <input type="date" name="Dob" required /><br />
+    <input type="text" name="PhoneNumber" placeholder="Phone Number" required /><br />
+
+    <input type="hidden" name="RoleId" value="2" />
+
+    <button type="submit">Gửi đăng ký</button>
+</form>
