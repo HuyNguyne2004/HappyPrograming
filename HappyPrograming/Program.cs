@@ -16,6 +16,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<MenteeRepository>();
 builder.Services.AddScoped<MenteeService>();
+builder.Services.AddScoped<MentorRepository>();
 
 var app = builder.Build();
 
@@ -36,6 +37,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Mentee}/{action=Index}/{id?}");
+    pattern: "{controller=Mentor}/{action=Profile}/{id=1}");
 
 app.Run();
