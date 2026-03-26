@@ -1,9 +1,16 @@
 ﻿@model HappyPrograming.Models.Mentor
 
 <div class="profile-container">
-    <h2>Mentor Profile: @Model.User.FirstName @Model.User.LastName</h2>
-    <p>Chuyên môn: @Model.Profession</p>
-    <p>Giới thiệu: @Model.ProfessionIntroduction</p>
+    @if (Model != null && Model.User != null)
+    {
+        <h2>Mentor Profile: @Model.User.FirstName @Model.User.LastName</h2>
+        <p>Chuyên môn: @Model.Profession</p>
+        <p>Giới thiệu: @Model.ProfessionIntroduction</p>
+    }
+    else
+    {
+        <h2 class="text-danger">Không tìm thấy thông tin chi tiết của Mentor!</h2>
+    }
 
     <hr />
     <h3>Đổi mật khẩu (NEW FLOW)</h3>
@@ -18,7 +25,8 @@
     }
 
     <form asp-action="ChangePassword" method="post">
-        <input type="hidden" name="userId" value="@Model.UserId" />
+
+        <input type="hidden" name="userId" value="@(Model?.UserId ?? 0)" />
         <input type="password" name="oldPass" placeholder="Mật khẩu cũ" required /><br />
         <input type="password" name="newPass" placeholder="Mật khẩu mới" required /><br />
         <input type="password" name="confirm" placeholder="Xác nhận mật khẩu mới" required /><br />

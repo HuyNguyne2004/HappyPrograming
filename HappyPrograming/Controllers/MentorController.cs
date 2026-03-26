@@ -35,12 +35,12 @@ namespace HappyPrograming.Controllers
             }
 
             // 3: validateUserAndOldPassword
-            bool isValid = _mentorRepo.ValidateUserPassword(userId, oldPass);
+            bool isValid = _mentorRepo.ValidateUserPassword(2, oldPass);
 
             if (isValid) // [isValid = true]
             {
                 // 6a: updatePassword
-                _mentorRepo.UpdatePassword(userId, newPass);
+                _mentorRepo.UpdatePassword(2, newPass);
                 ViewBag.Success = "Đổi mật khẩu thành công!"; // 8a: return success
             }
             else // [isValid = false]
